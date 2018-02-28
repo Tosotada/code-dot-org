@@ -2,11 +2,6 @@ import Subtype from './subtype';
 import PlanterCell from './planterCell';
 import PlanterDrawer from './planterDrawer';
 
-const TerminationValue = {
-  PLANT_IN_NON_SOIL: 0,
-  DID_NOT_PLANT_EVERYWHERE: 1,
-};
-
 export default class Planter extends Subtype {
 
   reset() {
@@ -47,6 +42,13 @@ export default class Planter extends Subtype {
     return cell.featureType() === type;
   }
 
+  // Overridable termination handler methods
+
+  onPlantInNonSoil = () => {};
+  setPlantInNonSoilHandler(handler) {
+    this.onPlantInNonSoil = handler;
+  }
+
   plant(id) {
     const col = this.maze_.pegmanX;
     const row = this.maze_.pegmanY;
@@ -54,7 +56,7 @@ export default class Planter extends Subtype {
     const cell = this.getCell(row, col);
 
     if (cell.featureType() !== PlanterCell.FeatureType.SOIL) {
-      this.maze_.executionInfo.terminateWithValue(TerminationValue.PLANT_IN_NON_SOIL);
+      this.onPlantInNonSoil();
       return;
     }
 
@@ -76,5 +78,3 @@ export default class Planter extends Subtype {
     this.drawer.updateItemImage(row, col, true);
   }
 }
-
-Planter.TerminationValue = TerminationValue;

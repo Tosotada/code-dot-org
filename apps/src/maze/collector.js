@@ -17,8 +17,6 @@ import {
   setCollectorCurrentCollected,
 } from './redux';
 
-const COLLECTED_TOO_MANY = 4;
-
 export default class Collector extends Subtype {
   reset() {
     if (this.maze_.store) {
@@ -49,10 +47,17 @@ export default class Collector extends Subtype {
     return true;
   }
 
+  // Overridable termination handler methods
+
+  onCollectedTooMany = () => {};
+  setCollectedTooManyHandler(handler) {
+    this.onCollectedTooMany = handler;
+  }
+
   collect(id, row, col) {
     const currVal = this.maze_.map.getValue(row, col);
     if (currVal === undefined || currVal < 1) {
-      this.maze_.executionInfo.terminateWithValue(COLLECTED_TOO_MANY);
+      this.onCollectedTooMany();
     } else {
       this.maze_.executionInfo.queueAction('pickup', id);
       this.maze_.map.setValue(row, col, currVal - 1);
