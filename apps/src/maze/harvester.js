@@ -90,7 +90,7 @@ export default class Harvester extends Gatherer {
     this.getCrop(HarvesterCell.FeatureType.LETTUCE, id);
   }
 
-  // Overridable termination handler methods
+  // Overridable event handlers
 
   onWrongCrop = () => {};
   setWrongCropHandler(handler) {
