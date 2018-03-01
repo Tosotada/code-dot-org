@@ -47,17 +47,13 @@ export default class Collector extends Subtype {
     return true;
   }
 
-  // Overridable event handlers
-
-  onCollectedTooMany = () => {};
-  setCollectedTooManyHandler(handler) {
-    this.onCollectedTooMany = handler;
-  }
-
+  /**
+   * @fires collectedTooMany
+   */
   collect(id, row, col) {
     const currVal = this.maze_.map.getValue(row, col);
     if (currVal === undefined || currVal < 1) {
-      this.onCollectedTooMany();
+      this.emit('collectedTooMany');
     } else {
       this.maze_.executionInfo.queueAction('pickup', id);
       this.maze_.map.setValue(row, col, currVal - 1);

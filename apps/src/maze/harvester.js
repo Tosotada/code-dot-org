@@ -90,18 +90,10 @@ export default class Harvester extends Gatherer {
     this.getCrop(HarvesterCell.FeatureType.LETTUCE, id);
   }
 
-  // Overridable event handlers
-
-  onWrongCrop = () => {};
-  setWrongCropHandler(handler) {
-    this.onWrongCrop = handler;
-  }
-
-  onEmptyCrop = () => {};
-  setEmptyCropHandler(handler) {
-    this.onEmptyCrop = handler;
-  }
-
+  /**
+   * @fires wrongCrop
+   * @fires emptyCrop
+   */
   getCrop(crop, id) {
     const col = this.maze_.pegmanX;
     const row = this.maze_.pegmanY;
@@ -109,12 +101,12 @@ export default class Harvester extends Gatherer {
     const cell = this.getCell(row, col);
 
     if (cell.featureType() !== crop) {
-      this.onWrongCrop();
+      this.emit('wrongCrop');
       return;
     }
 
     if (cell.getCurrentValue() === 0) {
-      this.onEmptyCrop();
+      this.emit('emptyCrop');
       return;
     }
 

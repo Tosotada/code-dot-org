@@ -271,42 +271,24 @@ export default class Bee extends Gatherer {
     this.nectars_.push({ row, col });
   }
 
-  // Overridable event handlers
-
-  onNotAtFlower = () => {};
-  setNotAtFlowerHandler(handler) {
-    this.onNotAtFlower = handler;
-  }
-
-  onFlowerEmpty = () => {};
-  setFlowerEmptyHandler(handler) {
-    this.onFlowerEmpty = handler;
-  }
-
-  onNotAtHive = () => {};
-  setNotAtHiveHandler(handler) {
-    this.onNotAtHive = handler;
-  }
-
-  onHiveFull = () => {};
-  setHiveFullHandler(handler) {
-    this.onHiveFull = handler;
-  }
-
   // API
 
+  /**
+   * @fires notAtFlower
+   * @fires flowerEmpty
+   */
   getNectar(id) {
     const col = this.maze_.pegmanX;
     const row = this.maze_.pegmanY;
 
     // Make sure we're at a flower.
     if (!this.isFlower(row, col)) {
-      this.onNotAtFlower();
+      this.emit('notAtFlower');
       return;
     }
     // Nectar is positive.  Make sure we have it.
     if (this.flowerRemainingCapacity(row, col) === 0) {
-      this.onFlowerEmpty();
+      this.emit('flowerEmpty');
       return;
     }
 
@@ -314,17 +296,22 @@ export default class Bee extends Gatherer {
     this.gotNectarAt(row, col);
   }
 
-  // Note that this deliberately does not check whether bee has gathered nectar.
+  /**
+   * Note that this deliberately does not check whether bee has gathered nectar.
+   *
+   * @fires notAtHive
+   * @fires hiveFull
+   */
   makeHoney(id) {
     const col = this.maze_.pegmanX;
     const row = this.maze_.pegmanY;
 
     if (!this.isHive(row, col)) {
-      this.onNotAtHive();
+      this.emit('notAtHive');
       return;
     }
     if (this.hiveRemainingCapacity(row, col) === 0) {
-      this.onHiveFull();
+      this.emit('hiveFull');
       return;
     }
 

@@ -42,13 +42,9 @@ export default class Planter extends Subtype {
     return cell.featureType() === type;
   }
 
-  // Overridable event handlers
-
-  onPlantInNonSoil = () => {};
-  setPlantInNonSoilHandler(handler) {
-    this.onPlantInNonSoil = handler;
-  }
-
+  /**
+   * @fires plantInNonSoil
+   */
   plant(id) {
     const col = this.maze_.pegmanX;
     const row = this.maze_.pegmanY;
@@ -56,7 +52,7 @@ export default class Planter extends Subtype {
     const cell = this.getCell(row, col);
 
     if (cell.featureType() !== PlanterCell.FeatureType.SOIL) {
-      this.onPlantInNonSoil();
+      this.emit('plantInNonSoil');
       return;
     }
 
