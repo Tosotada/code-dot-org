@@ -1,0 +1,64 @@
+Feature: Public Project Gallery
+Then I make a playlab project named "Published"
+Then I publish the project
+Then I make a playlab project named "Published Featured"
+Then I publish the project
+Then I feature the project
+Then I make a playlab project named "Unpublished Featured"
+Then I feature the project
+Then I make a playlab project named "Unpublished Unfeatured"
+Then I feature the project
+Then I unfeature the project
+Then I make a playlab project named "Published Unfeatured"
+Then I publish the project
+Then I feature the project
+Then I unfeature the project
+
+Background:
+  Given I sign in as "Project_Czar"
+  And I give user "Project_Czar" project validator permission
+  # sign in with project_validator permissions
+  # make project1 - to be published
+  # make project2 - to be featured
+
+
+Scenario: Unpublished Projects Do NOT Show in Gallery
+# navigate to the gallery
+# make sure my projects are not there
+
+Scenario: Published Projects Show in Gallery
+# publish project1
+# navigate to the gallery
+# make sure project1 is in the gallery
+
+Scenario: Unpublished Featured Projects Do NOT Show in Gallery
+# feature project2
+# navigate to the gallery
+# make sure it's not in the gallery
+
+Scenario: Published Featured Projects Show First in Gallery
+# publish project2
+# navigate to the gallery
+# make sure project2 is in the gallery before project1
+
+Scenario: Unfeatured Published Projects show in recency order, not first
+# unfeature project2
+# navigate to the gallery
+# make sure project2 is in the gallery after project1
+
+
+Scenario Unfeatured Unpublished Projects do NOT show in Gallery
+# unpublish project2
+# navigate to the gallery
+# make sure project2 is not in the gallery
+
+
+___________________________________
+Scenario: Unpublished Projects Do NOT Show in Gallery
+  Then I make a playlab project named "Unpublished"
+  Given I am on "http://studio.code.org/projects/public"
+
+Scenario: Published Projects Show Up in Gallery By Recency
+  Then I make a playlab project named "Published"
+  Then I publish the project
+  Given I am on "http://studio.code.org/projects/public"
